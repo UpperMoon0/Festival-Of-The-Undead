@@ -1,19 +1,17 @@
 using Mirror;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class GameNetworkManager : MonoBehaviour
 {
     NetworkManager networkManager;
-    InputField ipInputField;
+    string ip;
     public GameObject ipInputFieldObj;
     public TextMeshProUGUI warningText;
 
     void Start()
     {
         networkManager = GetComponent<NetworkManager>();
-        ipInputField = ipInputFieldObj.GetComponent<InputField>();
     }
     public void StartSinglePlayer()
     {
@@ -27,13 +25,18 @@ public class GameNetworkManager : MonoBehaviour
 
     public void JoinGame()
     {
-        if (ipInputField == null || string.IsNullOrEmpty(ipInputField.text))
+        if (string.IsNullOrEmpty(ip))
         {
             warningText.text = "Please enter the correct host IP!";
             return;
         }
 
-        networkManager.networkAddress = ipInputField.text;
+        networkManager.networkAddress = ip;
         networkManager.StartClient();
+    }
+
+    public void SetIP(string ip)
+    {
+        this.ip = ip;
     }
 }

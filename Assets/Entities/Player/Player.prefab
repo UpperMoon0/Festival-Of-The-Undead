@@ -94,13 +94,14 @@ GameObject:
   m_Component:
   - component: {fileID: 8680462034546095459}
   - component: {fileID: 8680462034546095458}
-  - component: {fileID: 8680462034546095389}
   - component: {fileID: 8680462034546095456}
   - component: {fileID: 8680462034546095457}
   - component: {fileID: -2978324855972921675}
   - component: {fileID: -999977768705828428}
   - component: {fileID: -5876305454730031784}
+  - component: {fileID: 8680462034546095389}
   - component: {fileID: 325733701328132776}
+  - component: {fileID: 1583598431119138641}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -176,21 +177,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &8680462034546095389
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8680462034546095388}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c43054ee323ac44ebc79cdec207fb94, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncDirection: 0
-  syncMode: 0
-  syncInterval: 0
 --- !u!50 &8680462034546095456
 Rigidbody2D:
   serializedVersion: 4
@@ -313,6 +299,21 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &8680462034546095389
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8680462034546095388}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c43054ee323ac44ebc79cdec207fb94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
 --- !u!114 &325733701328132776
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -330,3 +331,18 @@ MonoBehaviour:
   syncInterval: 0
   buildingGhostPrefab: {fileID: 6182680321273518543, guid: 615a6bf2bb3038e41a3f7beb1be414be, type: 3}
   wallPrefab: {fileID: 6028601642750546302, guid: 7cadc66effddd8443b1855a661c9aad4, type: 3}
+--- !u!114 &1583598431119138641
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8680462034546095388}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f9a5c842d7bece4693d872c1e110abc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
