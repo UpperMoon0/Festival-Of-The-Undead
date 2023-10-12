@@ -4,7 +4,12 @@ using UnityEngine;
 public class Zombie : NetworkBehaviour
 {
     private float speed = 1f; // adjust to desired speed
-
+    private Rigidbody2D rb;
+    void Start()
+    {
+        rb = GetComponent<Rigidbody2D>();
+        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+    }
     void Update()
     {
         if (!isServer) // only run on server
@@ -34,7 +39,6 @@ public class Zombie : NetworkBehaviour
             }
         }
 
-        Debug.Log("Closest player is " + closest.name);
         return closest;
     }
 }

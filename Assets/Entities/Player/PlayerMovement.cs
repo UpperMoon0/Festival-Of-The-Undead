@@ -1,7 +1,7 @@
 using UnityEngine;
 using Mirror;
 
-public class Player : NetworkBehaviour
+public class PlayerMovement : NetworkBehaviour
 {
     private float speed = 5f;
     private Rigidbody2D rb;
@@ -14,6 +14,7 @@ public class Player : NetworkBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
         if (!isOwned) enabled = false;
     }
 
