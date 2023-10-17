@@ -3,12 +3,13 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - DestructibleBuilding
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - OpenGate
   - Water
   - UI
   - 
@@ -38,6 +39,12 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Low Building
+    uniqueID: 2687082173
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Building Ghost
+    uniqueID: 3885157925
     locked: 0
