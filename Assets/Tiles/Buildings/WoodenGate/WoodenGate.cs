@@ -8,7 +8,10 @@ public class WoodenGate : DefensiveBuilding, IInteractableBuilding
     [SyncVar] private bool open = false;
 
     public override int id => 1;
+
     public override string tileName => "Wooden Gate";
+
+    public override int price => 50;
 
     protected override void AwakeExtension()
     {

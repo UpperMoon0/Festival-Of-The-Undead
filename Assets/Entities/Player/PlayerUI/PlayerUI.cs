@@ -49,7 +49,8 @@ public class PlayerUI : MonoBehaviour
             int index = i;
             buildingButton.GetComponent<Button>().onClick.AddListener(delegate { CreateBuildingGhost(buildingPrefabs[index]); });
 
-            buildingButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = buildingPrefabs[i].GetComponent<Tile>().tileName;
+            buildingButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = buildingPrefabs[i].GetComponent<Building>().tileName;
+            buildingButton.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = buildingPrefabs[i].GetComponent<Building>().price.ToString();
             buildingButtons[i] = buildingButton;
         }
 

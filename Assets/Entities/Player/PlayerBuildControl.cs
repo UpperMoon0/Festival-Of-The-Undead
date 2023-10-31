@@ -5,10 +5,10 @@ using UnityEngine;
 public class PlayerBuildControl : NetworkBehaviour
 {
     [SerializeField] private WorldManager s_WorldManager;
+    [SerializeField] private SpawnManager s_SpawnManager;
+    [SerializeField] private Player s_player;
 
     [SerializeField] private GameObject c_BuildingGhost;
-
-    [SerializeField] private Player c_player;
 
     [SerializeField] [SyncVar] private Vector3 buildingGhostPos;
     [SerializeField] [SyncVar] private bool canPlace = true;
@@ -16,16 +16,12 @@ public class PlayerBuildControl : NetworkBehaviour
 
     void Start()
     {
-        if (isLocalPlayer)
-        {
-            c_player = GetComponent<Player>();
-        }
-
-
         if (isServer)
         {
             GameObject gameManager = GameObject.Find("Game Manager");
             s_WorldManager = gameManager.GetComponent<WorldManager>();
+            s_SpawnManager = gameManager.GetComponent<SpawnManager>();
+            s_player = GetComponent<Player>();
         } 
     }
 
@@ -53,7 +49,7 @@ public class PlayerBuildControl : NetworkBehaviour
                 // Place the building
                 if (Input.GetMouseButtonDown(0) && canPlace)
                 {
-                    CmdPlaceBuilding(buildingID, buildingGhostPos, c_player);    
+                    CmdPlaceBuilding(buildingID, buildingGhostPos);    
                 }
             }
 
@@ -79,13 +75,16 @@ public class PlayerBuildControl : NetworkBehaviour
     [Command]
     private void CmdUpdateCanPlace(int buildingID, Vector3 pos)
     {
-        canPlace = s_WorldManager.CanPlaceTile(buildingID, pos);
+        bool condition1 = s_WorldManager.CanPlaceTile(buildingID, pos);
+        bool condition2 = s_player.Currency >= ((Building) s_SpawnManager.GetTileByID(buildingID).GetComponent<Tile>()).price;
+        canPlace = condition1 && condition2;
     }
 
     [Command]
-    private void CmdPlaceBuilding(int buildingID, Vector3 pos, Player owner)
+    private void CmdPlaceBuilding(int buildingID, Vector3 pos)
     {
-        s_WorldManager.PlaceTile(buildingID, pos, owner);
+        s_WorldManager.PlaceTile(buildingID, pos, s_player);
+        s_player.Currency -= ((Building) s_SpawnManager.GetTileByID(buildingID).GetComponent<Tile>()).price;
     }
 
     [Command]

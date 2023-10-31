@@ -6,8 +6,10 @@ public abstract class Building : Tile
 
     [SerializeField] [SyncVar] protected int maxHealth;
     [SerializeField] [SyncVar] protected int currentHealth;
-    [SerializeField] [SyncVar] protected Player owner;
+
+    [SerializeField] protected Player owner;
     [SerializeField] public abstract int type { get; }
+    [SerializeField] public abstract int price { get; }
 
     public Player Owner
     {

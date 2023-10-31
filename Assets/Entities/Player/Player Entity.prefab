@@ -187,7 +187,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 467, y: 0}
+  m_AnchoredPosition: {x: 470.5, y: -1}
   m_SizeDelta: {x: 150, y: 520}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8779742243439497181
@@ -1782,6 +1782,7 @@ MonoBehaviour:
   syncInterval: 0
   s_WorldManager: {fileID: 0}
   c_BuildingGhost: {fileID: 0}
+  c_player: {fileID: 0}
   buildingGhostPos: {x: 0, y: 0, z: 0}
   canPlace: 1
 --- !u!114 &2804215153204799570
@@ -1818,3 +1819,4 @@ MonoBehaviour:
   currency: 0
   s_CurrencyTickRate: 1
   s_CurrencyLastTick: 0
+  s_CurrencyTickAmount: 5

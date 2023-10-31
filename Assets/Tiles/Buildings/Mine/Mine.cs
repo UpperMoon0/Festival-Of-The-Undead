@@ -2,11 +2,13 @@ using UnityEngine;
 
 public class Mine : EconomyBuilding
 {
+    [SerializeField] private int currencyTickAmount = 25;
+
     public override int id => 3;
 
     public override string tileName => "Mine";
 
-    [SerializeField] private int currencyTickAmount = 25;
+    public override int price => 100;
 
     protected override void StartExtension()
     {
