@@ -3,21 +3,141 @@ using UnityEngine;
 
 public class WorldManager : NetworkBehaviour 
 { 
-    private Building[,] grid;
+    private Tile[,] grid;
     private float gridSize = 1f;
+    private int worldWidth = 100;
+    private int worldHeight = 100;
 
-    void Start()
+    public float GridSize
     {
-        grid = new Building[100, 100];
+        get { return gridSize; }
     }
 
-    public bool CanPlaceBuilding(Vector3 position)
+    public int WorldWidth
+    {
+        get { return worldWidth; }
+    }
+
+    public int WorldHeight
+    {
+        get { return worldHeight; }
+    }
+
+    void Awake()
+    {
+        grid = new Tile[worldWidth, worldHeight];
+    }
+
+    public bool CanPlaceTile(int tileID, Vector2 position)
     {
         Vector2Int gridPosition = WorldToGrid(position);
         int gridX = gridPosition.x;
         int gridY = gridPosition.y;
 
-        if (gridX < 0 || gridX >= grid.GetLength(0) || gridY < 0 || gridY >= grid.GetLength(1))
+        if (OutOfGridBound(gridX, gridY))
+        {
+            return false;
+        }
+
+        // Check if tile is a mine
+        if (tileID == 3)
+        {
+            if (GetTileAtGrid(gridX,gridY) is ResourceTile)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        return grid[gridX, gridY] == null;
+    }
+
+    public void PlaceTile(int tileID, Vector2 pos)
+    {
+        Vector2Int gridPosition = WorldToGrid(pos);
+        int gridX = gridPosition.x;
+        int gridY = gridPosition.y;
+
+        if (OutOfGridBound(gridX, gridY))
+        {
+            return;
+        }
+
+        GameObject tile = Instantiate(GetComponent<SpawnManager>().GetTileByID(tileID), pos, Quaternion.identity);
+        NetworkServer.Spawn(tile);
+        grid[gridX, gridY] = tile.GetComponent<Tile>();
+    }
+
+    public void PlaceTile(int buildingID, Vector2 pos, Player owner)
+    {
+        Vector2Int gridPosition = WorldToGrid(pos);
+        int gridX = gridPosition.x;
+        int gridY = gridPosition.y;
+
+        if (OutOfGridBound(gridX, gridY))
+        {
+            return;
+        }
+
+        if (buildingID == 3)
+        {
+            Tile resourceTile = GetTileAtGrid(gridX, gridY);
+
+            if (resourceTile is ResourceTile)
+            {
+                resourceTile.DestroyTile();
+            }
+        }
+
+        GameObject tile = Instantiate(GetComponent<SpawnManager>().GetTileByID(buildingID), pos, Quaternion.identity);
+        NetworkServer.Spawn(tile);
+        tile.GetComponent<Building>().Owner = owner;
+        grid[gridX, gridY] = tile.GetComponent<Tile>();
+    }
+
+
+    public void RemoveTile(Vector2 pos)
+    {
+        Vector2Int gridPosition = WorldToGrid(pos);
+        int gridX = gridPosition.x;
+        int gridY = gridPosition.y;
+
+        if (!OutOfGridBound(gridX, gridY))
+        {
+            grid[gridX, gridY] = null;
+        }
+    }
+
+    public Vector2Int WorldToGrid(Vector2 worldPos)
+    {
+        int x = Mathf.RoundToInt((worldPos.x + grid.GetLength(0) * gridSize / 2) / gridSize);
+        int y = Mathf.RoundToInt((worldPos.y + grid.GetLength(1) * gridSize / 2) / gridSize);
+        return new Vector2Int(x, y);
+    }
+
+    public Vector2 GridToWorld(Vector2Int gridPos)
+    {
+        float x = (gridPos.x * gridSize) - grid.GetLength(0) * gridSize / 2;
+        float y = (gridPos.y * gridSize) - grid.GetLength(1) * gridSize / 2;
+        return new Vector2(x, y);
+    }
+
+    public Tile GetTileAtGrid(int gridX, int gridY)
+    {
+        if (OutOfGridBound(gridX, gridY))
+        {
+            return null;
+        }
+
+        return grid[gridX, gridY];
+    }
+
+    public bool TileEmpty(int gridX, int gridY)
+    {
+        if (OutOfGridBound(gridX, gridY))
         {
             return false;
         }
@@ -25,32 +145,8 @@ public class WorldManager : NetworkBehaviour
         return grid[gridX, gridY] == null;
     }
 
-    public void PlaceBuilding(int buildingID, Vector3 position)
+    private bool OutOfGridBound(int gridX, int gridY)
     {
-        if (CanPlaceBuilding(position))
-        {
-            GameObject building = Instantiate(GetComponent<SpawnManager>().GetBuildingByID(buildingID), position, Quaternion.identity);
-            NetworkServer.Spawn(building);
-
-            Vector2Int gridPosition = WorldToGrid(position);
-            int gridX = gridPosition.x;
-            int gridY = gridPosition.y;
-
-            grid[gridX, gridY] = building.GetComponent<Building>();
-        }
-    }
-
-    public Vector2Int WorldToGrid(Vector3 worldPosition)
-    {
-        int x = Mathf.RoundToInt((worldPosition.x + grid.GetLength(0) * gridSize / 2) / gridSize);
-        int y = Mathf.RoundToInt((worldPosition.y + grid.GetLength(1) * gridSize / 2) / gridSize);
-        return new Vector2Int(x, y);
-    }
-
-    public Vector3 GridToWorld(Vector2Int gridPosition)
-    {
-        float x = (gridPosition.x * gridSize) - grid.GetLength(0) * gridSize / 2;
-        float y = (gridPosition.y * gridSize) - grid.GetLength(1) * gridSize / 2;
-        return new Vector3(x, y, 0);
+        return gridX < 0 || gridX >= grid.GetLength(0) || gridY < 0 || gridY >= grid.GetLength(1);
     }
 }

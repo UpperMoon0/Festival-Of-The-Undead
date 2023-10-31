@@ -8,6 +8,7 @@ public class FOTUNetworkManager : NetworkManager
     public TextMeshProUGUI warningText;
     public GameObject[] enemyPrefabs = new GameObject[1];
     public GameObject[] buildingPrefabs = new GameObject[2];
+    public GameObject[] resourcesPrefab = new GameObject[1];
 
     private string ip;
 
@@ -18,9 +19,14 @@ public class FOTUNetworkManager : NetworkManager
             spawnPrefabs.Add(enemy);
         }
 
-        foreach (GameObject building in buildingPrefabs)
+        foreach (GameObject tile in buildingPrefabs)
         {
-            spawnPrefabs.Add(building);
+            spawnPrefabs.Add(tile);
+        }
+
+        foreach (GameObject resource in resourcesPrefab)
+        {
+            spawnPrefabs.Add(resource);
         }
     }
 

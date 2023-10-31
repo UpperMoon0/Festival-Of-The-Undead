@@ -1,8 +1,8 @@
-public class WoodenWall : DestructibleBuilding
+public class WoodenWall : DefensiveBuilding
 {
     public override int id => 0;
 
-    public override string buildingName => "Wooden Wall";
+    public override string tileName => "Wooden Wall";
 
     protected override void StartExtension()
     {
@@ -11,6 +11,7 @@ public class WoodenWall : DestructibleBuilding
         if (isServer)
         {
             maxHealth = 1000;
+            currentHealth = maxHealth;
         }
     }
 }

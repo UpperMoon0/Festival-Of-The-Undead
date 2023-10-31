@@ -3,7 +3,7 @@ using Mirror;
 
 public class PlayerMovement : NetworkBehaviour
 {
-    // NetworkTransform has authority over the player's position
+    // NetworkTransform has authority over the c_player's position
     private float speed = 5f;
     private Rigidbody2D rb;
     void Start()

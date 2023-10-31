@@ -1952,7 +1952,7 @@ MonoBehaviour:
   disconnectInactiveConnections: 0
   disconnectInactiveTimeout: 60
   authenticator: {fileID: 0}
-  playerPrefab: {fileID: 8680462034546095388, guid: 88ac46b2a3dfc8f4db2bd83cc463aff4, type: 3}
+  playerPrefab: {fileID: 2803087198640366431, guid: 2cdad09395a6ba74097523e65d8798be, type: 3}
   autoCreatePlayer: 1
   playerSpawnMethod: 0
   spawnPrefabs: []
@@ -1976,6 +1976,9 @@ MonoBehaviour:
   buildingPrefabs:
   - {fileID: 6028601642750546302, guid: 7cadc66effddd8443b1855a661c9aad4, type: 3}
   - {fileID: 6028601642750546302, guid: 52179358b3d3318488e36a498a065130, type: 3}
+  - {fileID: 6028601642750546302, guid: 90965c4b5039b86478b2e9cd822dd0e5, type: 3}
+  resourcesPrefab:
+  - {fileID: 6028601642750546302, guid: 82ecefed16f5d2c46a75d410fa8fb648, type: 3}
 --- !u!1 &2019505667
 GameObject:
   m_ObjectHideFlags: 0

@@ -2,32 +2,43 @@ using Mirror;
 using System;
 using UnityEngine;
 
-public class PlayerBuildingControl : NetworkBehaviour
+public class PlayerBuildControl : NetworkBehaviour
 {
-    [SerializeField] private WorldManager s_worldManager;
-    [SerializeField] private GameObject c_buildingGhost;
+    [SerializeField] private WorldManager s_WorldManager;
+
+    [SerializeField] private GameObject c_BuildingGhost;
+
+    [SerializeField] private Player c_player;
+
     [SerializeField] [SyncVar] private Vector3 buildingGhostPos;
     [SerializeField] [SyncVar] private bool canPlace = true;
 
+
     void Start()
     {
+        if (isLocalPlayer)
+        {
+            c_player = GetComponent<Player>();
+        }
+
+
         if (isServer)
         {
             GameObject gameManager = GameObject.Find("Game Manager");
-            s_worldManager = gameManager.GetComponent<WorldManager>();
-        }
+            s_WorldManager = gameManager.GetComponent<WorldManager>();
+        } 
     }
 
     void Update()
     {
         if (isLocalPlayer)
         {
-            if (c_buildingGhost != null)
+            if (c_BuildingGhost != null)
             {
-                BuildingGhost buildingGhostScript = c_buildingGhost.GetComponent<BuildingGhost>();
+                BuildingGhost buildingGhostScript = c_BuildingGhost.GetComponent<BuildingGhost>();
 
                 // Get the mouse position in world space
-                Camera playerCamera = transform.GetChild(1).GetComponent<Camera>();
+                Camera playerCamera = transform.parent.GetChild(2).GetComponent<Camera>();
                 Vector3 mousePos = playerCamera.ScreenToWorldPoint(Input.mousePosition);
 
                 // Update the building ghost position
@@ -35,13 +46,14 @@ public class PlayerBuildingControl : NetworkBehaviour
                 buildingGhostScript.MoveToPos(buildingGhostPos);
 
                 // Update the canPlace variable
-                CmdUpdateCanPlace(buildingGhostPos);
+                int buildingID = buildingGhostScript.GetBuildingPrefab().GetComponent<Tile>().id;
+                CmdUpdateCanPlace(buildingID, buildingGhostPos);
                 buildingGhostScript.CanPlace(canPlace);
 
                 // Place the building
                 if (Input.GetMouseButtonDown(0) && canPlace)
                 {
-                    CmdPlaceBuilding(buildingGhostScript.GetBuildingPrefab().GetComponent<Building>().id, buildingGhostPos);    
+                    CmdPlaceBuilding(buildingID, buildingGhostPos, c_player);    
                 }
             }
 
@@ -49,48 +61,48 @@ public class PlayerBuildingControl : NetworkBehaviour
         }
     }
 
-    public void SetBuildingGhost(GameObject buildingGhost) => c_buildingGhost = buildingGhost;
+    public void SetBuildingGhost(GameObject buildingGhost) => c_BuildingGhost = buildingGhost;
 
-    public GameObject GetBuildingGhost() => c_buildingGhost;
+    public GameObject GetBuildingGhost() => c_BuildingGhost;
 
     public Vector3 GetBuildingGhostPos() => buildingGhostPos;
 
-    public void DestroyBuildingGhost() => Destroy(c_buildingGhost);
+    public void DestroyBuildingGhost() => Destroy(c_BuildingGhost);
 
     [Command]
     private void CmdUpdateBuildingGhostPos(Vector3 mousePos)
     {
-        Vector2Int gridPosition = s_worldManager.WorldToGrid(mousePos);
-        buildingGhostPos = s_worldManager.GridToWorld(gridPosition);
+        Vector2Int gridPosition = s_WorldManager.WorldToGrid(mousePos);
+        buildingGhostPos = s_WorldManager.GridToWorld(gridPosition);
     }
 
     [Command]
-    private void CmdUpdateCanPlace(Vector3 pos)
+    private void CmdUpdateCanPlace(int buildingID, Vector3 pos)
     {
-        canPlace = s_worldManager.CanPlaceBuilding(pos);
+        canPlace = s_WorldManager.CanPlaceTile(buildingID, pos);
     }
 
     [Command]
-    public void CmdPlaceBuilding(int buildingID, Vector3 pos)
+    private void CmdPlaceBuilding(int buildingID, Vector3 pos, Player owner)
     {
-        s_worldManager.PlaceBuilding(buildingID, pos);
+        s_WorldManager.PlaceTile(buildingID, pos, owner);
     }
 
     [Command]
-    public void CmdInteractWithBuilding()
+    private void CmdInteractWithBuilding()
     {
         // Define the interaction radius
         float interactionRadius = 2f;
 
-        // Get all InteractableBuilding objects within the interaction radius
+        // Get all IInteractableBuilding objects within the interaction radius
         Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, interactionRadius);
 
-        // Sort hitColliders by distance to player
+        // Sort hitColliders by distance to c_player
         Array.Sort(hitColliders, (a, b) => ((Vector2)(a.transform.position - transform.position)).sqrMagnitude.CompareTo(((Vector2)(b.transform.position - transform.position)).sqrMagnitude));
 
         foreach (var hitCollider in hitColliders)
         {
-            InteractableBuilding building = hitCollider.GetComponent<InteractableBuilding>();
+            IInteractableBuilding building = hitCollider.GetComponent<IInteractableBuilding>();
             if (building != null)
             {
                 // Interact with the building

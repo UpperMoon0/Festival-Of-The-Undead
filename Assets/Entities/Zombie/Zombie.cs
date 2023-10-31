@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class Zombie : NetworkBehaviour
 {
-    private float speed = 1f; // adjust to desired speed
-    private float attackRange = 1f; // adjust to desired attack range
-    private int attackDamage = 500; // adjust to desired attack damage
-    private float attackCooldown = 1.5f; // adjust to desired attack cooldown
+    private float speed = 1f; 
+    private float attackRange = 1f;
+    private int attackDamage = 20; 
+    private float attackCooldown = 1.5f;
     private float lastAttackTime;
     private Rigidbody2D rb;
 
@@ -42,7 +42,7 @@ public class Zombie : NetworkBehaviour
     [Server]
     void AttackBuilding(GameObject building)
     {
-        DestructibleBuilding destructibleBuilding = building.GetComponent<DestructibleBuilding>();
+        Building destructibleBuilding = building.GetComponent<Building>();
         if (destructibleBuilding != null)
         {
             destructibleBuilding.TakeDamage(attackDamage);

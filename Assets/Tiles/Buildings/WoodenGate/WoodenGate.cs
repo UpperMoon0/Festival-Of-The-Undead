@@ -1,14 +1,14 @@
 using Mirror;
 using UnityEngine;
 
-public class WoodenGate : InteractableBuilding
+public class WoodenGate : DefensiveBuilding, IInteractableBuilding
 {
     public Sprite[] gateSprites = new Sprite[2];
     private SpriteRenderer gateRenderer;
     [SyncVar] private bool open = false;
 
     public override int id => 1;
-    public override string buildingName => "Wooden Gate";
+    public override string tileName => "Wooden Gate";
 
     protected override void AwakeExtension()
     {
@@ -26,6 +26,7 @@ public class WoodenGate : InteractableBuilding
         if (isServer)
         {
             maxHealth = 1000;
+            currentHealth = maxHealth;
         }
     }
 
@@ -45,7 +46,7 @@ public class WoodenGate : InteractableBuilding
         }
     }
 
-    public override void Interact()
+    public void Interact()
     {
         if (isServer)
         {
