@@ -6,9 +6,10 @@ public class FOTUNetworkManager : NetworkManager
 {
     public GameObject ipInputFieldObj;
     public TextMeshProUGUI warningText;
-    public GameObject[] enemyPrefabs = new GameObject[1];
-    public GameObject[] buildingPrefabs = new GameObject[2];
-    public GameObject[] resourcesPrefab = new GameObject[1];
+    public GameObject[] enemyPrefabs;
+    public GameObject[] buildingPrefabs;
+    public GameObject[] resourcesPrefab;
+    public GameObject[] projectilesPrefab;
 
     private string ip;
 
@@ -19,28 +20,33 @@ public class FOTUNetworkManager : NetworkManager
             spawnPrefabs.Add(enemy);
         }
 
-        foreach (GameObject tile in buildingPrefabs)
+        foreach (GameObject building in buildingPrefabs)
         {
-            spawnPrefabs.Add(tile);
+            spawnPrefabs.Add(building);
         }
 
         foreach (GameObject resource in resourcesPrefab)
         {
             spawnPrefabs.Add(resource);
         }
+
+        foreach (GameObject projectile in projectilesPrefab)
+        {
+            spawnPrefabs.Add(projectile);
+        }
     }
 
-    public void StartSinglePlayer()
+    public void OnSingleplayerButtonClick()
     {
         maxConnections = 0; 
         StartHost();
     }
-    public void StartGameHost()
+    public void OnHostButtonClick()
     {
         StartHost();
     }
 
-    public void JoinGame()
+    public void OnJoinButtonClick()
     {
         if (string.IsNullOrEmpty(ip))
         {

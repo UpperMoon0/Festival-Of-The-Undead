@@ -1,55 +1,54 @@
-using Mirror;
 using UnityEngine;
 
-public class Zombie : NetworkBehaviour
+public class Zombie : Enemy
 {
-    private float speed = 1f; 
-    private float attackRange = 1f;
-    private int attackDamage = 20; 
-    private float attackCooldown = 1.5f;
-    private float lastAttackTime;
-    private Rigidbody2D rb;
+    [SerializeField] private float speed = 1f;
+    [SerializeField] private float attackRange = 1f;
+    [SerializeField] private int dmg = 20;
+    [SerializeField] private float attackCD = 1.5f;
+    [SerializeField] private float lastAttackTime;
 
-    void Start()
+    protected override void StartExtension()
     {
-        if (!isServer) return;
+        base.StartExtension();
 
-        rb = GetComponent<Rigidbody2D>();
-        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+        maxHealth = 100;
+        currentHealth = maxHealth;
     }
 
-    void Update()
+    protected override void UpdateExtension()
     {
-        if (!isServer) return;
+        base.UpdateExtension();
 
-        GameObject closestPlayer = FindClosestPlayer();
-        GameObject closestBuilding = FindClosestBuilding();
-
-        if (closestBuilding != null && Vector2.Distance(transform.position, closestBuilding.transform.position) <= attackRange)
+        if (isServer)
         {
-            if (Time.time >= lastAttackTime + attackCooldown)
+            GameObject closestPlayer = FindClosestPlayer();
+            GameObject closestBuilding = FindClosestBuilding();
+
+            if (closestBuilding != null && Vector2.Distance(transform.position, closestBuilding.transform.position) <= attackRange)
             {
-                AttackBuilding(closestBuilding);
-                lastAttackTime = Time.time;
+                if (Time.time >= lastAttackTime + attackCD)
+                {
+                    AttackBuilding(closestBuilding);
+                    lastAttackTime = Time.time;
+                }
+            }
+            else if (closestPlayer != null)
+            {
+                transform.position = Vector2.MoveTowards(transform.position, closestPlayer.transform.position, speed * Time.deltaTime);
             }
         }
-        else if (closestPlayer != null)
-        {
-            transform.position = Vector2.MoveTowards(transform.position, closestPlayer.transform.position, speed * Time.deltaTime);
-        }
     }
 
-    [Server]
     void AttackBuilding(GameObject building)
     {
         Building destructibleBuilding = building.GetComponent<Building>();
         if (destructibleBuilding != null)
         {
-            destructibleBuilding.TakeDamage(attackDamage);
+            destructibleBuilding.TakeDamage(dmg);
         }
     }
 
-    [Server]
     GameObject FindClosestPlayer()
     {
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
@@ -70,7 +69,6 @@ public class Zombie : NetworkBehaviour
         return closest;
     }
 
-    [Server]
     GameObject FindClosestBuilding()
     {
         GameObject[] buildings = GameObject.FindGameObjectsWithTag("DestructibleBuilding");

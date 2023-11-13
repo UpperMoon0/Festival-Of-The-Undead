@@ -1,4 +1,4 @@
 public abstract class EconomyBuilding : Building
 {
-    public override int type => 1;
+    public override int Type => 1;
 }

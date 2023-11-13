@@ -1,12 +1,13 @@
 using Mirror;
 using UnityEngine;
 
-public class WorldManager : NetworkBehaviour 
-{ 
-    private Tile[,] grid;
-    private float gridSize = 1f;
-    private int worldWidth = 100;
-    private int worldHeight = 100;
+public class GridManager : NetworkBehaviour 
+{
+    [SerializeField] private Tile[,] grid;
+
+    [SerializeField] private float gridSize = 1f;
+    [SerializeField] private int worldWidth = 100;
+    [SerializeField] private int worldHeight = 100;
 
     public float GridSize
     {
@@ -28,13 +29,14 @@ public class WorldManager : NetworkBehaviour
         grid = new Tile[worldWidth, worldHeight];
     }
 
-    public bool CanPlaceTile(int tileID, Vector2 position)
+    public bool CanPlaceTile(int tileID, Vector2 pos)
     {
-        Vector2Int gridPosition = WorldToGrid(position);
+        TileManager tileManager = GetComponent<TileManager>();
+        Vector2Int gridPosition = WorldToGrid(pos);
         int gridX = gridPosition.x;
         int gridY = gridPosition.y;
 
-        if (OutOfGridBound(gridX, gridY))
+        if (OutOfGridBound(gridX, gridY) || tileManager.GetTileByID(tileID) == null)
         {
             return false;
         }
@@ -55,7 +57,7 @@ public class WorldManager : NetworkBehaviour
         return grid[gridX, gridY] == null;
     }
 
-    public void PlaceTile(int tileID, Vector2 pos)
+    public bool CanRemoveTile(Building building, Player player, Vector2 pos)
     {
         Vector2Int gridPosition = WorldToGrid(pos);
         int gridX = gridPosition.x;
@@ -63,26 +65,44 @@ public class WorldManager : NetworkBehaviour
 
         if (OutOfGridBound(gridX, gridY))
         {
+            return false;
+        }
+
+        return GetTileAtGrid(gridX, gridY) is Building && building.Owner.Equals(player);
+    }
+
+    public void PlaceTile(int tileID, Vector2 pos)
+    {
+        TileManager tileManager = GetComponent<TileManager>();
+        Vector2Int gridPosition = WorldToGrid(pos);
+        
+        int gridX = gridPosition.x;
+        int gridY = gridPosition.y;
+
+        if (OutOfGridBound(gridX, gridY) || tileManager.GetTileByID(tileID) == null)
+        {
             return;
         }
 
-        GameObject tile = Instantiate(GetComponent<SpawnManager>().GetTileByID(tileID), pos, Quaternion.identity);
+        GameObject tile = Instantiate(tileManager.GetTileByID(tileID), pos, Quaternion.identity);
         NetworkServer.Spawn(tile);
         grid[gridX, gridY] = tile.GetComponent<Tile>();
     }
 
-    public void PlaceTile(int buildingID, Vector2 pos, Player owner)
+    public void PlaceTile(int tileID, Vector2 pos, Player owner)
     {
+        TileManager tileManager = GetComponent<TileManager>();
         Vector2Int gridPosition = WorldToGrid(pos);
+
         int gridX = gridPosition.x;
         int gridY = gridPosition.y;
 
-        if (OutOfGridBound(gridX, gridY))
+        if (OutOfGridBound(gridX, gridY) || tileManager.GetTileByID(tileID) == null)
         {
             return;
         }
 
-        if (buildingID == 3)
+        if (tileID == 3)
         {
             Tile resourceTile = GetTileAtGrid(gridX, gridY);
 
@@ -92,22 +112,32 @@ public class WorldManager : NetworkBehaviour
             }
         }
 
-        GameObject tile = Instantiate(GetComponent<SpawnManager>().GetTileByID(buildingID), pos, Quaternion.identity);
+        GameObject tile = Instantiate(tileManager.GetTileByID(tileID), pos, Quaternion.identity);
         NetworkServer.Spawn(tile);
         tile.GetComponent<Building>().Owner = owner;
         grid[gridX, gridY] = tile.GetComponent<Tile>();
     }
 
-
-    public void RemoveTile(Vector2 pos)
+    public void RemoveTile(GameObject tile, Vector2 pos)
     {
         Vector2Int gridPosition = WorldToGrid(pos);
         int gridX = gridPosition.x;
         int gridY = gridPosition.y;
 
-        if (!OutOfGridBound(gridX, gridY))
+        if (OutOfGridBound(gridX, gridY))
         {
-            grid[gridX, gridY] = null;
+            return;
+        }
+
+        int tileID = tile.GetComponent<Tile>().ID;
+
+        NetworkServer.Destroy(tile);
+        grid[gridX, gridY] = null;
+
+        // Check if tile is a mine
+        if (tileID == 3)
+        {
+            PlaceTile(2, pos);
         }
     }
 

@@ -7,11 +7,11 @@ public class WoodenGate : DefensiveBuilding, IInteractableBuilding
     private SpriteRenderer gateRenderer;
     [SyncVar] private bool open = false;
 
-    public override int id => 1;
+    public override int ID => 1;
 
-    public override string tileName => "Wooden Gate";
+    public override string TileName => "Wooden Gate";
 
-    public override int price => 50;
+    public override int Price => 50;
 
     protected override void AwakeExtension()
     {

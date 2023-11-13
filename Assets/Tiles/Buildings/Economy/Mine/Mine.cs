@@ -4,11 +4,11 @@ public class Mine : EconomyBuilding
 {
     [SerializeField] private int currencyTickAmount = 25;
 
-    public override int id => 3;
+    public override int ID => 3;
 
-    public override string tileName => "Mine";
+    public override string TileName => "Mine";
 
-    public override int price => 100;
+    public override int Price => 100;
 
     protected override void StartExtension()
     {
@@ -28,7 +28,7 @@ public class Mine : EconomyBuilding
 
         if (isServer)
         {
-            worldManager.PlaceTile(2, transform.position);
+            s_GridManager.PlaceTile(2, transform.position);
             owner.CurrencyTickAmount -= currencyTickAmount;
         }
     }

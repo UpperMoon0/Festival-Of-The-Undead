@@ -11,7 +11,6 @@ public class PlayerMovement : NetworkBehaviour
         if (isLocalPlayer)
         {
             rb = GetComponent<Rigidbody2D>();
-            rb.constraints = RigidbodyConstraints2D.FreezeRotation;
         }
     }
 

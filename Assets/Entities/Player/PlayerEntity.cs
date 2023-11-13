@@ -16,6 +16,7 @@ public class PlayerEntity : NetworkBehaviour
         if (!isLocalPlayer)
         {
             playerCamera.SetActive(false);
+            playerCamera.GetComponent<AudioListener>().enabled = false;
             uiCamera.gameObject.SetActive(false);
             transform.GetChild(3).gameObject.SetActive(false);
         }

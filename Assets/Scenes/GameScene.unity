@@ -135,6 +135,7 @@ GameObject:
   - component: {fileID: 281568927}
   - component: {fileID: 281568925}
   - component: {fileID: 281568928}
+  - component: {fileID: 281568929}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -157,6 +158,10 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
+  tileManager: {fileID: 0}
+  gridSize: 1
+  worldWidth: 100
+  worldHeight: 100
 --- !u!4 &281568926
 Transform:
   m_ObjectHideFlags: 0
@@ -204,11 +209,24 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  enemyPrefabs:
-  - {fileID: 4334543998220871233, guid: 552a94d35e4055a4f818aea5a2fbdaaa, type: 3}
-  buildingPrefabs:
-  - {fileID: 6028601642750546302, guid: 7cadc66effddd8443b1855a661c9aad4, type: 3}
-  - {fileID: 6028601642750546302, guid: 52179358b3d3318488e36a498a065130, type: 3}
+  enemyPrefabs: []
+  resourcesPrefab: []
+  networkManager: {fileID: 0}
+  gridManager: {fileID: 0}
+  numberOfZombies: 10
+  spawnRadius: 20
+--- !u!114 &281568929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 281568924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 788bd7e946915534da9c8edb7161e5c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &635804263
 GameObject:
   m_ObjectHideFlags: 0

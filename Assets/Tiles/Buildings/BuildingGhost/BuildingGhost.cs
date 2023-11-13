@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class BuildingGhost : MonoBehaviour
 {
+    public Sprite demolishSprite;
+
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private GameObject buildingPrefab;
     [SerializeField] private bool canPlace = true;
@@ -20,6 +22,13 @@ public class BuildingGhost : MonoBehaviour
     { 
         this.buildingPrefab = buildingPrefab; 
         spriteRenderer.sprite = buildingPrefab.GetComponent<SpriteRenderer>().sprite;
+        transform.localScale = new Vector2(1f, 1f);
+    }
+
+    public void SetDemolish()
+    {
+        spriteRenderer.sprite = demolishSprite;
+        transform.localScale = new Vector2(.2f, .2f);
     }
 
     public GameObject GetBuildingPrefab() => buildingPrefab;

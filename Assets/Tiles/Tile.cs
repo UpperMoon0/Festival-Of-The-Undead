@@ -3,10 +3,11 @@ using UnityEngine;
 
 public abstract class Tile : NetworkBehaviour
 {
-    public abstract int id { get; }
-    public abstract string tileName { get; }
+    [SerializeField] public abstract int ID { get; }
+    [SerializeField] public abstract string TileName { get; }
 
-    protected WorldManager worldManager;
+    [SerializeField] protected GameObject s_GameManager;
+    [SerializeField] protected GridManager s_GridManager;
 
     private void Awake()
     { 
@@ -17,15 +18,20 @@ public abstract class Tile : NetworkBehaviour
     {
         if (isServer)
         {
-            worldManager = GameObject.Find("Game Manager").GetComponent<WorldManager>();
+            s_GameManager = GameObject.Find("Game Manager");
+            s_GridManager = s_GameManager.GetComponent<GridManager>();
         }
         StartExtension();
     }
 
+    private void Update()
+    {
+        UpdateExtension();
+    }
+
     public void DestroyTile()
     {
-        worldManager.RemoveTile(transform.position);
-        NetworkServer.Destroy(gameObject);
+        s_GridManager.RemoveTile(gameObject ,transform.position);
     }
 
     protected virtual void StartExtension()
@@ -34,6 +40,11 @@ public abstract class Tile : NetworkBehaviour
     }
 
     protected virtual void AwakeExtension()
+    {
+
+    }
+
+    protected virtual void UpdateExtension()
     {
 
     }

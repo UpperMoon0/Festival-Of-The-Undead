@@ -3,8 +3,9 @@ using UnityEngine;
 
 public class LivingEntity : NetworkBehaviour
 {
-    [SerializeField] [SyncVar] protected int maxHealth;
+    [SerializeField] protected int maxHealth;
     [SerializeField] [SyncVar] protected int currentHealth;
+    [SerializeField] protected Rigidbody2D rb;
 
     private void Awake()
     {
@@ -23,7 +24,8 @@ public class LivingEntity : NetworkBehaviour
 
     protected virtual void StartExtension()
     {
-
+        rb = GetComponent<Rigidbody2D>();
+        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
     }
 
     protected virtual void AwakeExtension()

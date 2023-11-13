@@ -1,12 +1,10 @@
-using UnityEngine;
-
 public class WoodenWall : DefensiveBuilding
 {
-    public override int id => 0;
+    public override int ID => 0;
 
-    public override string tileName => "Wooden Wall";
+    public override string TileName => "Wooden Wall";
 
-    public override int price => 50;
+    public override int Price => 50;
 
     protected override void StartExtension()
     {

@@ -1,6 +1,6 @@
 public class GoldOre : ResourceTile
 {
-    public override int id => 2;
+    public override int ID => 2;
 
-    public override string tileName => "Gold Ore";
+    public override string TileName => "Gold Ore";
 }
